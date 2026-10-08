@@ -3,402 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Cuánto me conoces, mi amor?</title>
-    
-    <!-- Tailwind CSS -->
+    <title>Para el amor de mi vida</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            overflow: hidden; /* Prevent scrolling for the background effect */
-            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #ffc3a0 100%);
-            background-size: 300% 300%;
-            animation: gradientMove 12s ease infinite;
+            overflow: hidden; /* Para los corazones flotantes */
+            background: linear-gradient(45deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-
-        @keyframes gradientMove {
+        .font-dancing { font-family: 'Dancing Script', cursive; }
+        
+        @keyframes gradientBG {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
 
-        .font-cursive {
-            font-family: 'Dancing Script', cursive;
+        /* Glassmorphism */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(255, 100, 150, 0.2);
         }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 32px 0 rgba(255, 136, 170, 0.3);
-            border-radius: 1.5rem;
-        }
-
+        /* Corazones flotantes */
         .heart {
             position: absolute;
-            font-size: 1.5rem;
-            color: rgba(255, 255, 255, 0.7);
-            user-select: none;
-            pointer-events: none;
-            animation: floatUp 8s linear infinite;
-            bottom: -50px;
+            bottom: -100px;
+            font-size: 24px;
+            color: rgba(255, 75, 114, 0.6);
+            animation: floatUp 10s linear infinite;
+            z-index: -1;
         }
-
         @keyframes floatUp {
-            0% {
-                transform: translateY(0) scale(0.8) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translateY(-100vh) scale(1.2) rotate(360deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) scale(1) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1.5) rotate(360deg); opacity: 0; }
         }
 
-        .screen-transition {
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-        
-        .hide-screen {
-            opacity: 0;
-            transform: scale(0.95);
-            pointer-events: none;
-            position: absolute;
-            visibility: hidden;
-        }
-        
-        .show-screen {
-            opacity: 1;
-            transform: scale(1);
-            position: relative;
-            visibility: visible;
+        .fade-in { animation: fadeIn 0.5s ease-in forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .option-btn {
-            transition: all 0.3s ease;
-        }
-        .option-btn:disabled {
-            cursor: not-allowed;
-            transform: none !important;
-        }
+        .hidden-screen { display: none !important; }
+        
+        .option-btn { transition: all 0.3s ease; }
+        .option-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,100,150,0.3); }
+        .correct { background-color: #d1fae5 !important; border-color: #10b981 !important; color: #065f46 !important; }
+        .incorrect { background-color: #ffe4e6 !important; border-color: #f43f5e !important; color: #9f1239 !important; }
     </style>
 </head>
-<body class="text-gray-800 p-4 relative w-full h-full">
+<body class="flex items-center justify-center p-4">
 
-    <!-- Background Hearts Container -->
-    <div id="hearts-container" class="absolute inset-0 overflow-hidden pointer-events-none z-0"></div>
+    <!-- Contenedor de corazones -->
+    <div id="hearts-container"></div>
 
-    <!-- Start Screen -->
-    <div id="screen-start" class="glass-panel w-full max-w-md p-8 md:p-10 text-center screen-transition show-screen z-10 mx-auto">
-        <div class="text-6xl mb-4 animate-bounce">💌</div>
-        <h1 class="text-4xl md:text-5xl font-bold text-rose-600 mb-2 font-cursive leading-tight">
-            ¿Cuánto me conoces, mi amor?
-        </h1>
-        <p class="text-gray-600 text-sm mb-8 mt-2">Un pequeño juego hecho con mucho amor para ti.</p>
-        
-        <div class="space-y-4">
-            <div class="text-left">
-                <label for="username" class="block text-sm font-medium text-pink-700 mb-1 ml-1">Tu hermoso nombre:</label>
-                <input type="text" id="username" placeholder="Ingresa tu nombre..." class="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:border-rose-400 focus:ring-4 focus:ring-rose-100 outline-none transition-all duration-300 text-gray-700 bg-white/90">
-                <p id="name-error" class="text-rose-500 text-xs mt-1 ml-1 hidden">Amor, necesitas poner tu nombre ❤️</p>
-            </div>
-            <button onclick="startQuiz()" class="w-full bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white font-semibold py-3.5 px-6 rounded-xl shadow-lg hover:shadow-pink-300/50 transform hover:-translate-y-1 transition-all duration-300 text-lg">
-                Empezar ✨
-            </button>
-        </div>
+    <!-- PANTALLA DE INICIO -->
+    <div id="start-screen" class="glass-card rounded-3xl p-8 max-w-md w-full text-center fade-in z-10">
+        <h1 class="font-dancing text-5xl text-rose-600 mb-4">Hola mi amor ❤️</h1>
+        <p class="text-gray-700 mb-6 text-lg">He preparado este pequeño juego para ver qué tanto me conoces y recordar cositas nuestras.</p>
+        <input type="text" id="name-input" placeholder="Escribe tu nombre hermoso aquí" class="w-full px-4 py-3 rounded-xl border-2 border-pink-200 focus:outline-none focus:border-rose-400 text-center mb-6 bg-white/60">
+        <button onclick="startQuiz()" class="w-full bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg text-lg">
+            ¡Empezar a jugar! 🥰
+        </button>
     </div>
 
-    <!-- Quiz Screen -->
-    <div id="screen-quiz" class="glass-panel w-full max-w-lg p-6 md:p-8 screen-transition hide-screen z-10 mx-auto">
-        <div class="flex justify-between items-center mb-6 border-b border-pink-200 pb-3">
-            <span class="text-sm font-semibold text-rose-600 bg-white/50 px-3 py-1 rounded-full" id="question-counter">1/10</span>
-            <span class="text-sm font-bold text-pink-500 flex items-center">
-                ❤️ <span id="current-score" class="ml-1">0</span>
-            </span>
+    <!-- PANTALLA DEL QUIZ -->
+    <div id="quiz-screen" class="glass-card rounded-3xl p-6 md:p-8 max-w-xl w-full hidden-screen z-10">
+        <div class="flex justify-between items-center mb-6">
+            <span id="progress-text" class="text-rose-600 font-semibold">Pregunta 1 de 10</span>
+            <span class="bg-rose-100 text-rose-600 py-1 px-3 rounded-full text-sm font-bold shadow-sm">Puntos: <span id="score">0</span></span>
         </div>
         
-        <h2 id="question-text" class="text-xl md:text-2xl font-semibold text-gray-800 mb-6 min-h-[4rem]">
-            <!-- Pregunta se carga aquí -->
-        </h2>
-        
-        <div id="options-container" class="space-y-3 mb-6">
-            <!-- Opciones se cargan aquí -->
+        <div class="mb-8 min-h-[80px] flex items-center">
+            <h2 id="question-text" class="text-xl md:text-2xl text-gray-800 font-semibold leading-relaxed"></h2>
         </div>
 
-        <div class="flex justify-end h-12">
-            <button id="btn-next" onclick="nextQuestion()" class="hidden bg-rose-500 hover:bg-rose-600 text-white font-medium py-2.5 px-6 rounded-xl shadow-md transform hover:scale-105 transition-all duration-300">
-                Siguiente ➔
-            </button>
+        <div id="options-container" class="space-y-3">
+            <!-- Opciones generadas por JS -->
         </div>
+
+        <div id="feedback" class="mt-6 text-center min-h-[60px]"></div>
+
+        <button id="next-btn" onclick="nextQuestion()" class="w-full mt-4 bg-rose-500 hover:bg-rose-600 text-white font-bold py-3 px-6 rounded-xl transition-colors shadow-lg hidden">
+            Siguiente pregunta 💖
+        </button>
     </div>
 
-    <!-- Result Screen -->
-    <div id="screen-result" class="glass-panel w-full max-w-md p-8 text-center screen-transition hide-screen z-10 mx-auto">
-        <div class="text-7xl mb-4">💖</div>
-        <h1 class="text-4xl md:text-5xl font-bold text-rose-600 mb-2 font-cursive" id="result-title">
-            ¡Terminaste!
-        </h1>
+    <!-- PANTALLA DE RESULTADOS -->
+    <div id="result-screen" class="glass-card rounded-3xl p-8 max-w-xl w-full text-center hidden-screen z-10">
+        <!-- El mensaje gigante irá aquí -->
+        <div id="final-message-container" class="mb-6"></div>
         
-        <div class="bg-white/60 rounded-2xl p-6 my-6 border border-pink-100 shadow-inner">
-            <p class="text-sm text-pink-600 uppercase tracking-widest font-bold mb-1">Tu puntaje</p>
-            <p class="text-6xl font-black bg-clip-text text-transparent bg-gradient-to-r from-rose-500 to-pink-500 font-cursive" id="final-score">
-                0/10
-            </p>
-        </div>
-
-        <p class="text-4xl md:text-5xl text-rose-600 mb-8 font-bold font-cursive leading-tight" id="result-message">
-            <!-- Mensaje dinámico -->
-        </p>
-
-        <button onclick="resetQuiz()" class="w-full bg-white border-2 border-rose-400 text-rose-500 hover:bg-rose-50 font-bold py-3.5 px-6 rounded-xl shadow-sm transform hover:scale-105 transition-all duration-300">
+        <p class="text-gray-700 mb-2 text-lg">Tu puntaje final es:</p>
+        <p class="text-4xl font-bold text-rose-600 mb-6"><span id="final-score"></span> / 10</p>
+        
+        <p id="result-message" class="text-gray-800 text-lg mb-8 italic"></p>
+        
+        <button onclick="location.reload()" class="bg-white text-rose-500 border-2 border-rose-400 hover:bg-rose-50 font-bold py-2 px-6 rounded-xl transition-colors">
             Volver a jugar 🔄
         </button>
     </div>
 
     <script>
-        // Generar corazones de fondo animados
+        // Preguntas configuradas con tus respuestas exactas
+        const questions = [
+            {
+                q: "1. ¿Cuál es el primer nombre de nuestra futura hija?",
+                options: ["Selin", "josline", "talyncito", "barci", "Joslyn"],
+                ans: 4
+            },
+            {
+                q: "2. ¿Dónde fue nuestra primera cita o nuestra primera salida especial?",
+                options: ["Fuimos al cine a ver una película.", "Fuimos a comer algo rico y conversar.", "Caminando por un parque o plaza.", "Nos vimos en una fiesta o reunión de amigos."],
+                ans: 2
+            },
+            {
+                q: "3. ¿Quién de los dos fue el primero en decir 'Te amo'?",
+                options: ["Yo primero, me ganaron las ganas y el sentimiento.", "Tú primero, fuiste más valiente.", "Lo dijimos casi al mismo tiempo, fue mágico.", "Se dio poco a poco y sin darnos cuenta ya nos amábamos."],
+                ans: 0
+            },
+            {
+                q: "4. ¿Qué es lo que más me encanta de ti físicamente?",
+                options: ["Tus labios", "Tus ojos hermosos y tu mirada.", "Tu cabello y tu carita preciosa.", "Tu figura y tu forma de caminar."],
+                ans: 0
+            },
+            {
+                q: "5. ¿Cuál es el destino de viaje que más sueño con hacer a tu lado?",
+                options: ["Ir a una playa hermosa, tomar el sol y relajarnos.", "Conocer la nieve o ir a un lugar con clima súper frío y acurrucarnos.", "Viajar a otro país y recorrer ciudades famosas juntos.", "Una aventura en la selva, campo o naturaleza."],
+                ans: 2
+            },
+            {
+                q: "6. ¿Cuál es mi reacción típica cuando me enojo o me frustro por alguna tontería?",
+                options: ["Me quedo callado/a un rato hasta que se me pase solito.", "Empiezo a renegar o quejarme en voz alta.", "Me da ganas de comer algo rico para calmarme.", "Busco abrazarte porque tú eres mi lugar seguro y me calmas."],
+                ans: 3
+            },
+            {
+                q: "7. Si nos vamos a vivir juntos a nuestra propia casita, ¿qué es lo primero que yo compraría sin dudarlo?",
+                options: ["Una tele enorme para ver nuestras series/películas.", "Una cama gigante y súper cómoda.", "Cosas para la cocina y mucha comida rica.", "Decoraciones y cositas para que se vea súper bonito."],
+                ans: 3
+            },
+            {
+                q: "8. ¿Qué detalle sencillo es el que me hace más feliz en un día normal?",
+                options: ["Que me traigas o me invites mi dulce/postre favorito de sorpresa.", "Un mensajito largo y bonito de la nada mientras no estamos juntos.", "Que me invites a comer mi plato preferido.", "Llenarme de besos y abrazos apenas nos vemos."],
+                ans: 3
+            },
+            {
+                q: "9. Si tuviéramos que adoptar a un integrante más (una mascota) ahora mismo, ¿qué preferiría yo?",
+                options: ["Un perrito súper juguetón y cariñoso.", "Un gatito tranquilo y mimoso.", "Un ave, hámster o mascota pequeñita.", "Mejor ninguna mascota por ahora, solo nosotros."],
+                ans: 0
+            },
+            {
+                q: "10. ¿Cómo me imagino nuestro futuro juntos de aquí a unos años?",
+                options: ["Viviendo juntos en nuestra casita, súper felices.", "Viajando y disfrutando la vida juntos.", "Teniendo mucho éxito profesional.", "Casados y felices."],
+                ans: 3
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let userName = "";
+        let answered = false;
+
+        // Crear corazones flotantes
         function createHearts() {
             const container = document.getElementById('hearts-container');
-            const emojis = ['❤️', '💖', '💕', '💗', '🥰', '✨'];
-            for (let i = 0; i < 20; i++) {
-                const heart = document.createElement('div');
+            for(let i=0; i<15; i++) {
+                let heart = document.createElement('div');
+                heart.innerHTML = '❤️';
                 heart.className = 'heart';
-                heart.innerText = emojis[Math.floor(Math.random() * emojis.length)];
-                heart.style.left = `${Math.random() * 100}vw`;
-                heart.style.animationDuration = `${Math.random() * 5 + 7}s`;
-                heart.style.animationDelay = `${Math.random() * 5}s`;
-                heart.style.fontSize = `${Math.random() * 1.5 + 1}rem`;
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
                 container.appendChild(heart);
             }
         }
         createHearts();
 
-        // --- DATOS DEL QUIZ ---
-        const quizData = [
-            {
-                question: "¿Cuánto tiempo llevamos de relación?",
-                options: ["2 años y medio", "2 años y 9 meses", "3 años", "2 años y 11 meses"],
-                correct: 1
-            },
-            {
-                question: "¿Cuándo cumplimos 3 años?",
-                options: ["En noviembre", "En diciembre", "En enero", "En octubre"],
-                correct: 1
-            },
-            {
-                question: "¿Cuál es el primer nombre de nuestra futura hija?",
-                options: ["Selin", "josline", "talyncito", "barci"], // Opciones actualizadas
-                correct: 0
-            },
-            {
-                question: "¿Cuál es mi comida favorita en todo el mundo?",
-                options: ["El ceviche", "Un buen lomo saltado", "Pizza o comida rápida", "Las pastas"],
-                correct: 1
-            },
-            {
-                question: "Si tenemos un fin de semana libre solo para nosotros, ¿qué preferiría hacer?",
-                options: ["Quedarnos en casita abrazados", "Salir a pasear y comer por ahí", "Ir de viaje o aventura a un lugar nuevo", "Salir de fiesta"],
-                correct: 2
-            },
-            {
-                question: "¿Qué fue lo primero que me enamoró de ti cuando nos conocimos?",
-                options: ["Tu sonrisa hermosa", "Tus ojos y tu mirada", "Tu sentido del humor", "Lo inteligente que eres"],
-                correct: 0
-            },
-            {
-                question: "¿Cuál es esa pequeña 'manía' que tengo?",
-                options: ["Mover la pierna sin parar", "Irme a dormir súper tarde", "Dejar la ropa tirada", "Cantar o silbar de la nada"],
-                correct: 3
-            },
-            {
-                question: "¿Cuál sería el regalo perfecto para mí ahora mismo?",
-                options: ["Algo hecho a mano por ti", "Algo de ropa o zapatillas", "Algo tecnológico", "Una caja de mis dulces favoritos"],
-                correct: 0
-            },
-            {
-                question: "¿Cuál es mi género de películas favorito?",
-                options: ["Acción, superhéroes y explosiones", "Comedia", "Terror y suspenso", "Ciencia ficción"],
-                correct: 0
-            },
-            {
-                question: "¿Qué es lo que más valoro de nuestra relación?",
-                options: ["La confianza inmensa", "Cómo nos reímos juntos", "Que siempre estás ahí apoyándome", "¡Absolutamente todo!"],
-                correct: 3
-            }
-        ];
-
-        let currentIdx = 0;
-        let score = 0;
-        let userName = "";
-
-        // DOM Elements
-        const screens = {
-            start: document.getElementById('screen-start'),
-            quiz: document.getElementById('screen-quiz'),
-            result: document.getElementById('screen-result')
-        };
-        const dom = {
-            username: document.getElementById('username'),
-            nameError: document.getElementById('name-error'),
-            qCounter: document.getElementById('question-counter'),
-            cScore: document.getElementById('current-score'),
-            qText: document.getElementById('question-text'),
-            options: document.getElementById('options-container'),
-            btnNext: document.getElementById('btn-next'),
-            rTitle: document.getElementById('result-title'),
-            rScore: document.getElementById('final-score'),
-            rMsg: document.getElementById('result-message')
-        };
-
-        function switchScreen(from, to) {
-            from.classList.remove('show-screen');
-            from.classList.add('hide-screen');
-            setTimeout(() => {
-                to.classList.remove('hide-screen');
-                to.classList.add('show-screen');
-            }, 400); // Wait for fade out
-        }
-
         function startQuiz() {
-            const nameVal = dom.username.value.trim();
-            if (!nameVal) {
-                dom.nameError.classList.remove('hidden');
-                dom.username.classList.add('border-rose-500');
+            const input = document.getElementById('name-input').value.trim();
+            if (input === "") {
+                alert("Por favor, pon tu nombrecito mi amor ❤️");
                 return;
             }
-            userName = nameVal;
-            dom.nameError.classList.add('hidden');
-            dom.username.classList.remove('border-rose-500');
+            userName = input;
             
-            switchScreen(screens.start, screens.quiz);
+            document.getElementById('start-screen').classList.add('hidden-screen');
+            document.getElementById('quiz-screen').classList.remove('hidden-screen');
+            document.getElementById('quiz-screen').classList.add('fade-in');
+            
             loadQuestion();
         }
 
         function loadQuestion() {
-            dom.btnNext.classList.add('hidden');
-            dom.options.innerHTML = '';
-            
-            const q = quizData[currentIdx];
-            dom.qCounter.textContent = `${currentIdx + 1}/${quizData.length}`;
-            dom.cScore.textContent = score;
-            dom.qText.textContent = q.question;
+            answered = false;
+            const q = questions[currentQuestion];
+            document.getElementById('progress-text').innerText = `Pregunta ${currentQuestion + 1} de ${questions.length}`;
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('feedback').innerHTML = "";
+            document.getElementById('next-btn').classList.add('hidden');
 
-            q.options.forEach((optText, i) => {
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = "";
+
+            q.options.forEach((opt, index) => {
                 const btn = document.createElement('button');
-                btn.className = "option-btn w-full text-left bg-white border border-pink-100 hover:border-pink-300 hover:bg-pink-50 text-gray-700 font-medium py-3.5 px-5 rounded-xl shadow-sm outline-none flex items-center";
-                
-                // Círculo para el estado
-                const circle = document.createElement('span');
-                circle.className = "w-6 h-6 rounded-full border-2 border-pink-200 mr-3 flex-shrink-0 flex items-center justify-center text-xs text-transparent transition-colors";
-                
-                const textSpan = document.createElement('span');
-                textSpan.textContent = optText;
-
-                btn.appendChild(circle);
-                btn.appendChild(textSpan);
-
-                btn.onclick = () => selectOption(i, btn);
-                dom.options.appendChild(btn);
+                btn.className = "option-btn w-full text-left bg-white/70 border-2 border-pink-100 hover:border-rose-300 text-gray-700 py-3 px-5 rounded-xl text-md md:text-lg flex items-center justify-between";
+                btn.innerHTML = `
+                    <span>${opt}</span>
+                    <span class="icon w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center flex-shrink-0 ml-3"></span>
+                `;
+                btn.onclick = () => selectOption(index, btn);
+                optionsContainer.appendChild(btn);
             });
         }
 
-        function selectOption(selectedIndex, selectedBtn) {
-            const q = quizData[currentIdx];
-            const allBtns = dom.options.querySelectorAll('button');
-            
-            // Disable all options
-            allBtns.forEach(b => b.disabled = true);
+        function selectOption(index, selectedBtn) {
+            if (answered) return;
+            answered = true;
 
-            const isCorrect = selectedIndex === q.correct;
-            const circle = selectedBtn.querySelector('span:first-child');
+            const q = questions[currentQuestion];
+            const isCorrect = (index === q.ans);
+            const allButtons = document.querySelectorAll('.option-btn');
 
+            allButtons.forEach((btn, i) => {
+                btn.disabled = true;
+                btn.classList.remove('hover:border-rose-300', 'bg-white/70');
+                const icon = btn.querySelector('.icon');
+
+                if (i === q.ans) {
+                    btn.classList.add('correct');
+                    icon.innerHTML = '✓';
+                    icon.classList.add('border-green-600', 'bg-green-100');
+                    icon.classList.remove('border-gray-300');
+                } else if (i === index && !isCorrect) {
+                    btn.classList.add('incorrect');
+                    icon.innerHTML = '✗';
+                    icon.classList.add('border-red-600', 'bg-red-100');
+                    icon.classList.remove('border-gray-300');
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            const feedback = document.getElementById('feedback');
             if (isCorrect) {
-                // Correct styling
-                selectedBtn.className = "option-btn w-full text-left bg-green-50 border-2 border-green-400 text-green-800 font-medium py-3.5 px-5 rounded-xl shadow-sm flex items-center";
-                circle.className = "w-6 h-6 rounded-full border-2 border-green-500 bg-green-500 mr-3 flex-shrink-0 flex items-center justify-center text-white text-xs";
-                circle.innerHTML = "✓";
                 score++;
-                dom.cScore.textContent = score;
+                document.getElementById('score').innerText = score;
+                feedback.innerHTML = `<p class="text-green-600 font-bold text-lg animate-pulse">¡Correcto mi amor! 🥰</p>`;
             } else {
-                // Incorrect styling
-                selectedBtn.className = "option-btn w-full text-left bg-red-50 border-2 border-red-400 text-red-800 font-medium py-3.5 px-5 rounded-xl shadow-sm flex items-center";
-                circle.className = "w-6 h-6 rounded-full border-2 border-red-500 bg-red-500 mr-3 flex-shrink-0 flex items-center justify-center text-white text-xs";
-                circle.innerHTML = "✗";
-
-                // Highlight correct option
-                const correctBtn = allBtns[q.correct];
-                const correctCircle = correctBtn.querySelector('span:first-child');
-                correctBtn.className = "option-btn w-full text-left bg-green-50 border-2 border-green-400 text-green-800 font-medium py-3.5 px-5 rounded-xl shadow-sm flex items-center opacity-80";
-                correctCircle.className = "w-6 h-6 rounded-full border-2 border-green-500 bg-green-500 mr-3 flex-shrink-0 flex items-center justify-center text-white text-xs";
-                correctCircle.innerHTML = "✓";
+                feedback.innerHTML = `<p class="text-rose-600 font-bold text-lg">Ups... era la otra opción amor 🥺</p>`;
             }
 
-            if (currentIdx === quizData.length - 1) {
-                dom.btnNext.textContent = "Ver resultados ❤️";
+            // EXCEPCIÓN: MENSAJE ESPECIAL PARA LA PREGUNTA 4 (índice 3)
+            if (currentQuestion === 3) {
+                feedback.innerHTML += `<div class="mt-3 p-4 bg-pink-100/90 border-2 border-pink-300 text-rose-600 rounded-xl font-bold shadow-md animate-bounce">
+                    ✨ ¡Pero la verdad es que todo me encanta de ti, eres perfecta para mí! ✨
+                </div>`;
             }
-            dom.btnNext.classList.remove('hidden');
+
+            document.getElementById('next-btn').classList.remove('hidden');
         }
 
         function nextQuestion() {
-            currentIdx++;
-            if (currentIdx < quizData.length) {
-                // Fade out question content slightly
-                dom.qText.style.opacity = '0';
-                dom.options.style.opacity = '0';
-                
-                setTimeout(() => {
-                    loadQuestion();
-                    dom.qText.style.opacity = '1';
-                    dom.options.style.opacity = '1';
-                    dom.qText.style.transition = 'opacity 0.3s ease';
-                    dom.options.style.transition = 'opacity 0.3s ease';
-                }, 300);
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                const quizScreen = document.getElementById('quiz-screen');
+                quizScreen.classList.remove('fade-in');
+                void quizScreen.offsetWidth; // Trigger reflow
+                quizScreen.classList.add('fade-in');
+                loadQuestion();
             } else {
                 showResults();
             }
         }
 
         function showResults() {
-            dom.rTitle.textContent = `¡Terminaste!`;
-            dom.rScore.textContent = `${score}/10`;
+            document.getElementById('quiz-screen').classList.add('hidden-screen');
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.classList.remove('hidden-screen');
+            resultScreen.classList.add('fade-in');
 
-            // Mensaje final personalizado y muy romántico
-            dom.rMsg.textContent = `${userName}, quiero todo contigo mi amor`;
+            document.getElementById('final-score').innerText = score;
+            
+            // EL GRAN MENSAJE FINAL
+            document.getElementById('final-message-container').innerHTML = `
+                <h1 class="font-dancing text-5xl md:text-6xl text-rose-600 mb-2 leading-tight">
+                    ${userName}, quiero todo contigo mi amor
+                </h1>
+            `;
 
-            switchScreen(screens.quiz, screens.result);
+            let msg = "";
+            if (score === 10) {
+                msg = "¡10 de 10! Me conoces a la perfección, somos el uno para el otro. Te amo demasiado. ❤️";
+            } else if (score >= 7) {
+                msg = "¡Casi perfecto! Conoces muy bien mi corazón. Gracias por cada momento juntos. Te amo muchísimo. 💕";
+            } else {
+                msg = "Aún tenemos toda una vida juntos para seguir conociéndonos y amándonos cada día más. Te amo con todo mi corazón. 💖";
+            }
+            document.getElementById('result-message').innerText = msg;
         }
-
-        function resetQuiz() {
-            currentIdx = 0;
-            score = 0;
-            userName = "";
-            dom.username.value = "";
-            dom.btnNext.textContent = "Siguiente ➔";
-            switchScreen(screens.result, screens.start);
-        }
-
-        // Enter key support for input
-        dom.username.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') startQuiz();
-        });
     </script>
 </body>
 </html>
