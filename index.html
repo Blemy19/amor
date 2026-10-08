@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Cuánto me conoces, mi amor?</title>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +37,6 @@
             font-family: 'Dancing Script', cursive;
         }
 
-        /* Glassmorphism Styles */
         .glass-panel {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(12px);
@@ -45,7 +46,6 @@
             border-radius: 1.5rem;
         }
 
-        /* Floating Hearts Animation */
         .heart {
             position: absolute;
             font-size: 1.5rem;
@@ -73,7 +73,6 @@
             }
         }
 
-        /* Transitions for screens */
         .screen-transition {
             transition: opacity 0.4s ease, transform 0.4s ease;
         }
@@ -93,7 +92,6 @@
             visibility: visible;
         }
 
-        /* Option buttons styling */
         .option-btn {
             transition: all 0.3s ease;
         }
@@ -103,11 +101,12 @@
         }
     </style>
 </head>
-<body class="text-gray-800 p-4 relative">
+<body class="text-gray-800 p-4 relative w-full h-full">
 
     <!-- Background Hearts Container -->
     <div id="hearts-container" class="absolute inset-0 overflow-hidden pointer-events-none z-0"></div>
 
+    <!-- Start Screen -->
     <div id="screen-start" class="glass-panel w-full max-w-md p-8 md:p-10 text-center screen-transition show-screen z-10 mx-auto">
         <div class="text-6xl mb-4 animate-bounce">💌</div>
         <h1 class="text-4xl md:text-5xl font-bold text-rose-600 mb-2 font-cursive leading-tight">
@@ -127,6 +126,7 @@
         </div>
     </div>
 
+    <!-- Quiz Screen -->
     <div id="screen-quiz" class="glass-panel w-full max-w-lg p-6 md:p-8 screen-transition hide-screen z-10 mx-auto">
         <div class="flex justify-between items-center mb-6 border-b border-pink-200 pb-3">
             <span class="text-sm font-semibold text-rose-600 bg-white/50 px-3 py-1 rounded-full" id="question-counter">1/10</span>
@@ -150,6 +150,7 @@
         </div>
     </div>
 
+    <!-- Result Screen -->
     <div id="screen-result" class="glass-panel w-full max-w-md p-8 text-center screen-transition hide-screen z-10 mx-auto">
         <div class="text-7xl mb-4">💖</div>
         <h1 class="text-4xl md:text-5xl font-bold text-rose-600 mb-2 font-cursive" id="result-title">
@@ -193,19 +194,19 @@
         // --- DATOS DEL QUIZ ---
         const quizData = [
             {
-                question: "¿Cuánto tiempo llevamos de relación actualmente?",
-                options: ["2 años y 5 meses", "2 años y 9 meses", "3 años", "2 años y 11 meses"],
+                question: "¿Cuánto tiempo llevamos de relación?",
+                options: ["2 años y medio", "2 años y 9 meses", "3 años", "2 años y 11 meses"],
                 correct: 1
             },
             {
-                question: "¿Cuándo cumplimos nuestro tercer año juntos?",
-                options: ["En octubre", "En noviembre", "En diciembre", "En enero"],
-                correct: 2
+                question: "¿Cuándo cumplimos 3 años?",
+                options: ["En noviembre", "En diciembre", "En enero", "En octubre"],
+                correct: 1
             },
             {
-                question: "¿Cuál será el primer nombre de nuestra futura hija?",
-                options: ["Mía", "Selin", "Luna", "Sofía"],
-                correct: 1
+                question: "¿Cuál es el primer nombre de nuestra futura hija?",
+                options: ["Selin", "josline", "talyncito", "barci"], // Opciones actualizadas
+                correct: 0
             },
             {
                 question: "¿Cuál es mi comida favorita en todo el mundo?",
@@ -213,33 +214,33 @@
                 correct: 1
             },
             {
-                question: "Si tenemos un fin de semana libre solo para nosotros, ¿qué es lo que yo preferiría hacer?",
-                options: ["Quedarnos en casita abrazados viendo películas", "Salir a pasear y comer algo rico", "Ir de viaje o aventura a un lugar nuevo", "Salir de fiesta a bailar"],
+                question: "Si tenemos un fin de semana libre solo para nosotros, ¿qué preferiría hacer?",
+                options: ["Quedarnos en casita abrazados", "Salir a pasear y comer por ahí", "Ir de viaje o aventura a un lugar nuevo", "Salir de fiesta"],
                 correct: 2
             },
             {
-                question: "¿Qué fue lo primero que me llamó la atención o me enamoró de ti cuando nos conocimos?",
-                options: ["Tu sonrisa hermosa", "Tus ojos y tu mirada", "Tu sentido del humor", "Lo inteligente y apasionada que eres"],
+                question: "¿Qué fue lo primero que me enamoró de ti cuando nos conocimos?",
+                options: ["Tu sonrisa hermosa", "Tus ojos y tu mirada", "Tu sentido del humor", "Lo inteligente que eres"],
                 correct: 0
             },
             {
-                question: "¿Cuál es esa pequeña 'manía' o costumbre que tengo y que tú conoces perfectamente?",
-                options: ["Mover la pierna sin parar", "Irme a dormir súper tarde", "Dejar la ropa tirada a veces", "Cantar o silbar de la nada"],
+                question: "¿Cuál es esa pequeña 'manía' que tengo?",
+                options: ["Mover la pierna sin parar", "Irme a dormir súper tarde", "Dejar la ropa tirada", "Cantar o silbar de la nada"],
                 correct: 3
             },
             {
-                question: "Si me dieras a elegir un regalo perfecto ahora mismo, ¿cuál elegiría?",
-                options: ["Algo hecho a mano por ti (cartas, manualidades)", "Algo de ropa o zapatillas", "Algo tecnológico", "Una caja enorme de mis dulces favoritos"],
+                question: "¿Cuál sería el regalo perfecto para mí ahora mismo?",
+                options: ["Algo hecho a mano por ti", "Algo de ropa o zapatillas", "Algo tecnológico", "Una caja de mis dulces favoritos"],
                 correct: 0
             },
             {
-                question: "¿Cuál es mi género de películas o series favorito para ver?",
-                options: ["Acción, superhéroes y explosiones", "Comedia (me encanta reír)", "Terror y suspenso", "Ciencia ficción o documentales"],
+                question: "¿Cuál es mi género de películas favorito?",
+                options: ["Acción, superhéroes y explosiones", "Comedia", "Terror y suspenso", "Ciencia ficción"],
                 correct: 0
             },
             {
-                question: "De todas estas cosas, ¿qué es lo que más valoro y amo de nuestra relación?",
-                options: ["La confianza inmensa que nos tenemos", "Cómo nos reímos juntos de cualquier tontería", "Saber que siempre estás ahí apoyándome en todo", "¡Absolutamente todo!"],
+                question: "¿Qué es lo que más valoro de nuestra relación?",
+                options: ["La confianza inmensa", "Cómo nos reímos juntos", "Que siempre estás ahí apoyándome", "¡Absolutamente todo!"],
                 correct: 3
             }
         ];
@@ -323,7 +324,7 @@
             const q = quizData[currentIdx];
             const allBtns = dom.options.querySelectorAll('button');
             
-            // Disable all
+            // Disable all options
             allBtns.forEach(b => b.disabled = true);
 
             const isCorrect = selectedIndex === q.correct;
